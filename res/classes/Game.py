@@ -1,13 +1,16 @@
 import time
 import pygame
 from ..classes import *
+from pypresence import Presence
+import pypresence.exceptions
 
 
 class Game:
-    def __init__(self, scale):
+    def __init__(self, scale, cfg):
         self.screen = None
+        self.config = cfg
         self.size = [164, 204]
-        self.mode = [9, 9, 10]
+        self.mode = cfg['default_mode']
         self.field = None
         self.start_time = time.time()
         self.bombs_disp = Display(10, 13)
@@ -17,6 +20,13 @@ class Game:
         self.screen_resize = False
         self.menuButton = MenuButton(0, 0)
         self.timer = True
+        self.presence_use = cfg['presence']
+
+        try:
+            self.presence = Presence('995373260105592832')
+            self.presence.connect()
+        except pypresence.exceptions.DiscordNotFound:
+            self.presence_use = False
 
     def startGame(self):
         self.field = Field(self.mode[0], self.mode[1], self.mode[2], self.scale)
@@ -35,6 +45,13 @@ class Game:
             self.screen_resize = True
 
     def update(self, left_click, right_click, screen):
+        # presence
+        if self.presence_use:
+            self.presence.update(start=int(self.start_time),
+                                 state=f'Width: {self.mode[0]} | Height: {self.mode[1]} | Bombs: {self.mode[2]}',
+                                 details=f'Bombs left: {self.field.bomb_meter}',
+                                 large_image='img')
+
         # update displays
         if self.timer:
             self.time_disp.setValue(int(time.time() - self.start_time))
@@ -59,7 +76,7 @@ class Game:
         self.menuButton.draw(screen)
         if self.menuButton.rect.colliderect(pygame.Rect(mouse_pos[0] // self.scale, mouse_pos[1] // self.scale, 1, 1)):
             if pygame.mouse.get_pressed(3)[0]:
-                menu = Menu()
+                menu = Menu(self.config)
                 self.mode = menu.mode
                 self.startGame()
 

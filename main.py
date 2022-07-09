@@ -2,12 +2,18 @@ import pygame
 import time
 from res.classes import *
 from res.classes.Game import Game
+import yaml
+
+# config
+with open('config.yml', 'r') as f:
+    cfg = yaml.load(f, yaml.FullLoader)
+    f.close()
 
 # init pygame
 pygame.init()
 pygame.display.set_icon(pygame.image.load('res/images/icon.png'))
 
-WINDOW_SIZE = (328, 408)
+WINDOW_SIZE = cfg['window_size']
 screen = pygame.Surface((164, 204))
 window = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
@@ -16,7 +22,7 @@ SCALE = WINDOW_SIZE[1] // 164
 left_click = False
 right_click = False
 
-game = Game(SCALE)
+game = Game(SCALE, cfg)
 game.startGame()
 
 run = True
@@ -54,3 +60,5 @@ while run:
     pygame.display.update()
 
 pygame.quit()
+if game.presence_use:
+    game.presence.close()
