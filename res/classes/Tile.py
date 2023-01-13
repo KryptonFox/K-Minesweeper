@@ -76,23 +76,6 @@ class Tile(Sprite):
                     if not button.opened and not button.flagged:
                         button.click_left(field, False)
 
-    def preclick(self, field):
-        if not self.flagged and not self.opened:
-            self.image = self.images[1]
-            self.preclicked = True
-        elif self.opened and self.count > 0:
-            nearest = getNearest(self.index)
-            for nearRow in nearest:
-                for nearTile in nearRow:
-                    if -1 in nearTile or field.width == nearTile[1] or field.height == nearTile[0]:
-                        continue
-                    field.buttons[nearTile[0]][nearTile[1]].prepreclick()
-
-    def prepreclick(self):
-        if not self.flagged and not self.opened:
-            self.image = self.images[1]
-            self.preclicked = True
-
     def open(self, win=False, field=None):
         if self.opened:
             return

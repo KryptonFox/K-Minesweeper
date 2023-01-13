@@ -39,14 +39,10 @@ while run:
                 left_click = True
             elif event.button == 3:
                 right_click = True
-        if event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:
-                left_click = False
-            elif event.button == 3:
-                right_click = False
 
     # update
-    right_click = game.update(left_click, right_click, screen)
+    game.update(left_click, right_click, screen)
+    right_click, left_click = False, False
     if game.screen_resize:
         game.screen_resize = False
         WINDOW_SIZE = (game.size[0] * SCALE, game.size[1] * SCALE)

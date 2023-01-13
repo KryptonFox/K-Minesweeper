@@ -77,27 +77,14 @@ class Field:
         for row in self.buttons:
             for button in row:
                 button.draw(screen)
-                if button.preclicked and not button.opened:
-                    button.preclicked = False
-                    button.image = button.images[0]
                 if left_click or right_click or self.left_clicked:
                     mouse_pos = pygame.mouse.get_pos()
                     if button.rect.colliderect(pygame.Rect(mouse_pos[0] // self.scale, mouse_pos[1] // self.scale, 1, 1)):
                         if right_click:
                             button.click_right(self)
-                            right_click = False
                         elif left_click:
-                            self.left_clicked = True
-                            button.preclick(self)
-                        elif not left_click:
-                            if self.left_clicked:
-                                self.left_clicked = False
-                                if button.opened and self.left_clicked_timer > 5:
-                                    pass
-                                else:
-                                    button.click_left(self)
-                                self.left_clicked_timer = 0
-        return right_click, self.timer
+                            button.click_left(self)
+        return self.timer
 
     def endGame(self):
         self.stopped = True

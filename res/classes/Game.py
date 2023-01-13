@@ -78,5 +78,4 @@ class Game:
                 self.startGame()
 
         # update field
-        right_click, self.timer = self.field.update(left_click, right_click, screen)
-        return right_click
+        self.timer = self.field.update(left_click, right_click, screen)
