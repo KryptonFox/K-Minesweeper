@@ -5,3 +5,4 @@ from .Field import Field
 from .Display import Display
 from .Smile import Smile
 from .Menu import *
+from .Presence import Presence

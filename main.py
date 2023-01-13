@@ -61,4 +61,4 @@ while run:
 
 pygame.quit()
 if game.presence_use:
-    game.presence.close()
+    game.presence.presence.close()

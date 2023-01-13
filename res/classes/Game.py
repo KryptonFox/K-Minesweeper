@@ -1,8 +1,6 @@
 import time
 import pygame
 from ..classes import *
-from pypresence import Presence
-import pypresence.exceptions
 
 
 class Game:
@@ -20,13 +18,12 @@ class Game:
         self.screen_resize = False
         self.menuButton = MenuButton(0, 0)
         self.timer = True
-        self.presence_use = cfg['presence']
 
-        try:
-            self.presence = Presence('995373260105592832')
-            self.presence.connect()
-        except pypresence.exceptions.DiscordNotFound:
-            self.presence_use = False
+        # configure presence
+        if cfg['presence']:
+            self.presence = Presence()
+            self.presence_use = self.presence.checkUse()
+
 
     def startGame(self):
         self.field = Field(self.mode[0], self.mode[1], self.mode[2], self.scale)
@@ -47,7 +44,7 @@ class Game:
     def update(self, left_click, right_click, screen):
         # presence
         if self.presence_use:
-            self.presence.update(start=int(self.start_time),
+            self.presence_use = self.presence.update(start=int(self.start_time),
                                  state=f'Width: {self.mode[0]} | Height: {self.mode[1]} | Bombs: {self.mode[2]}',
                                  details=f'Bombs left: {self.field.bomb_meter}',
                                  large_image='img')
